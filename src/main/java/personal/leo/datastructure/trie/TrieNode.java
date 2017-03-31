@@ -26,6 +26,10 @@ public class TrieNode implements Serializable {
     private boolean tail;
     private char value;
     /**
+     * 存放额外的数据
+     */
+    private Object extra;
+    /**
      * 相同单词的总数,仅当单词结尾才+1
      */
     private int wordCount;
