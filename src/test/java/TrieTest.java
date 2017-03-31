@@ -2,9 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 import personal.leo.datastructure.trie.Trie;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -45,10 +43,12 @@ public class TrieTest {
     @Test
     public void putTest() throws Exception {
         Map<String, String> map = new HashMap<>(10240);
-        int SIZE = 200000;
+        int SIZE = 10000;
+        System.out.println("数据总量:" + SIZE);
         List<String> uuidList = new ArrayList<>(SIZE);
         String uuid, tmpUuid;
         uuid = UUID.randomUUID().toString();
+        System.out.println("单条数据示例:" + uuid);
         tmpUuid = uuid;
         for (int i = 0; i < SIZE; i++) {
             uuidList.add(uuid);
@@ -60,31 +60,33 @@ public class TrieTest {
             String tmp = uuidList.get(i);
             map.put(tmp, tmp);
         }
-        System.out.println("Map  插入总耗时:" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
+        System.out.println("Map  插入总耗时(s):" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
         begin = System.nanoTime();
         for (int i = 0; i < SIZE; i++) {
             String tmp = uuidList.get(i);
             trie.put(tmp, tmp);
         }
-        System.out.println("Trie 插入总耗时:" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
+        System.out.println("Trie 插入总耗时(s):" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
         begin = System.nanoTime();
         String s = map.get(tmpUuid);
-        System.out.println("Map  查询总耗时:" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
+        System.out.println("Map  查询总耗时(s):" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
         begin = System.nanoTime();
         Object extra = trie.get(tmpUuid).getExtra();
-        System.out.println("Trie 查询总耗时:" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
-        System.out.println(s);
-        System.out.println(extra);
-//        ObjectOutputStream oos0 = new ObjectOutputStream(new FileOutputStream("D:\\1.txt"));
-//        oos0.writeObject(trie);
-//        oos0.flush();
-//        oos0.close();
-//
-//        ObjectOutputStream oos1 = new ObjectOutputStream(new FileOutputStream("D:\\2.txt"));
-//        oos1.writeObject(map);
-//        oos1.flush();
-//        oos1.close();
-//
+        System.out.println("Trie 查询总耗时(s):" + BigDecimal.valueOf(System.nanoTime() - begin, 9));
+
+        ByteArrayOutputStream baos0 = new ByteArrayOutputStream();
+        ObjectOutputStream oos0 = new ObjectOutputStream(baos0);
+        oos0.writeObject(map);
+        oos0.flush();
+        System.out.println("Map  占用内存(MB):" + baos0.size() / 1024.0 / 1024.0);
+
+
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        ObjectOutputStream oos1 = new ObjectOutputStream(baos1);
+        oos1.writeObject(trie);
+        oos1.flush();
+        System.out.println("Trie 占用内存(MB):" + baos1.size() / 1024.0 / 1024.0);
+
 
     }
 
