@@ -30,7 +30,7 @@ public class Trie implements Serializable {
     /**
      * 用于字典树扩展,方便使用者在特定的地方,进行一些业务需要的回调.
      */
-    private TrieCallback trieCallback;
+    private transient TrieCallback trieCallback;
 
     @Builder
     public Trie(int wordCount, boolean replaceOldExtra, TrieCallback trieCallback) {
@@ -41,14 +41,14 @@ public class Trie implements Serializable {
     }
 
     public boolean startWith(String str) {
-        return startWith(str, false);
+        return match(str, false);
     }
 
     public boolean exactMatch(String str) {
-        return startWith(str, true);
+        return match(str, true);
     }
 
-    private boolean startWith(String str, boolean exactMatch) {
+    private boolean match(String str, boolean exactMatch) {
         if (StringUtils.isNotBlank(str)) {
             char[] chars = str.toCharArray();
             TrieNode parent = root;
